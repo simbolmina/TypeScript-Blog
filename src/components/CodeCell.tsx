@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CodeEditor from "./CodeEditor";
 import Preview from ".//Preview";
 import bundle from "../bundler";
@@ -8,17 +8,29 @@ function CodeCell() {
   const [code, setCode] = useState("");
   const [input, setInput] = useState("");
 
-  const clickHandler = async () => {
-    const result = await bundle(input);
-    setCode(result);
-  };
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      const result = await bundle(input);
+      setCode(result);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [input]);
 
   return (
     <Resizable direction="vertical">
-      <div style={{ height: "100%", display: "flex", flexDirection: "row" }}>
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
         <Resizable direction="horizontal">
           <CodeEditor
-            initialValue="console.log('test')"
+            initialValue="//Code Here"
             onChange={(value) => setInput(value)}
           />
         </Resizable>

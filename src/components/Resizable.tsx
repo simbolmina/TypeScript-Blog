@@ -1,5 +1,6 @@
 import { ResizableBox, ResizableBoxProps } from "react-resizable";
 import "./Resizable.css";
+import { useEffect, useState } from "react";
 
 interface ResizableProps {
   direction: "horizontal" | "vertical";
@@ -8,22 +9,55 @@ interface ResizableProps {
 
 const Resizable: React.FC<ResizableProps> = ({ direction, children }) => {
   let resizableProps: ResizableBoxProps;
+  const [innerHeight, setInnerHeight] = useState(window.innerHeight);
+  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth * 0.5);
+
+  useEffect(() => {
+    let timer: any;
+
+    const listener = () => {
+      //since resizing is laggy we add a timer to delay rerender till user let the window go and rerender. this is called debouncing.
+      if (timer) {
+        clearTimeout(timer);
+      }
+      timer = setTimeout(() => {
+        setInnerHeight(window.innerHeight);
+        setInnerWidth(window.innerWidth);
+        if (window.innerWidth * 0.5 < width) {
+          setWidth(window.innerWidth * 0.5);
+        }
+      }, 100);
+    };
+
+    window.addEventListener("resize", listener);
+
+    return () => {
+      window.removeEventListener("resize", listener);
+    };
+  }, [width]);
 
   if (direction === "horizontal") {
     resizableProps = {
-      height: 300,
-      width: window.innerWidth * 0.75,
+      // minConstraints: [window.innerWidth * 0.2, Infinity],
+      minConstraints: [innerWidth * 0.2, Infinity],
+      maxConstraints: [innerWidth * 0.75, Infinity],
+      height: Infinity,
+      // width: innerWidth * 0.5,
+      width,
       resizeHandles: ["e"],
-      maxConstraints: [window.innerWidth * 0.75, Infinity],
-      minConstraints: [window.innerWidth * 0.2, Infinity],
+      className: "resize-horizontal",
+      onResizeStop: (event, data) => {
+        setWidth(data.size.width);
+      },
     };
   } else {
     resizableProps = {
+      minConstraints: [Infinity, 60],
+      maxConstraints: [Infinity, innerHeight * 0.9],
       height: 300,
       width: Infinity,
       resizeHandles: ["s"],
-      maxConstraints: [Infinity, window.innerHeight * 0.7],
-      minConstraints: [Infinity, 60],
     };
   }
 

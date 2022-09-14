@@ -11,7 +11,9 @@ interface PreviewProps {
 
 const html = `
     <html>
-      <head></head>
+      <head>
+        <style>html {background-color: #fff}</style>
+      </head>
       <body>
         <div id="root"></div>
         <script>
@@ -40,7 +42,9 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
     iframe.current.srcdoc = html;
 
     //we are sending a messsage containing code outupt to parent (browser)
-    iframe.current.contentWindow.postMessage(code, "*");
+    setTimeout(() => {
+      iframe.current.contentWindow.postMessage(code, "*");
+    }, 50);
   }, [code]);
   return (
     <div className="preview-wrapper">

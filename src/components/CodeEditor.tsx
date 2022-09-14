@@ -44,6 +44,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   };
   return (
     <div className="editor-wrapper">
+      <button
+        className="button button-format is-primary is-small"
+        onClick={clickHandler}
+      >
+        Format
+      </button>
       <MonacoEditor
         editorDidMount={onEditorDidMount}
         value={initialValue}
@@ -61,12 +67,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
           automaticLayout: true,
         }}
       />
-      <button
-        className="button button-format is-primary is-small"
-        onClick={clickHandler}
-      >
-        Format
-      </button>
     </div>
   );
 };
