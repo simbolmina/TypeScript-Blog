@@ -14,20 +14,30 @@ const bundle = async (rawCode: string) => {
     });
   }
 
-  const result = await service.build({
-    entryPoints: ["index.js"],
-    bundle: true,
-    write: false,
-    plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
-    define: {
-      "process.env.NODE_ENV": '"production"',
-      //some packages requres this line. we want to pass production string, thats thy there are two quotes
-      global: "window",
-      //when bundling packages global variable should be window
-    },
-  });
-
-  return result.outputFiles[0].text;
+  try {
+    const result = await service.build({
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+      define: {
+        "process.env.NODE_ENV": '"production"',
+        //some packages requres this line. we want to pass production string, thats thy there are two quotes
+        global: "window",
+        //when bundling packages global variable should be window
+      },
+    });
+    return { code: result.outputFiles[0].text, err: "" };
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        code: "",
+        err: err.message,
+      };
+    } else {
+      throw err;
+    }
+  }
 };
 
 export default bundle;
