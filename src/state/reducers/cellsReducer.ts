@@ -19,50 +19,65 @@ const initialState: CellState = {
   data: {},
 };
 
-const reducer = produce(
-  (state: CellState = initialState, action: Action): CellState | void => {
-    switch (action.type) {
-      case ActionType.UPDATE_CELL:
-        const { id, content } = action.payload;
-        //without immer(produce) we have to return following object as state for redux but immer updates our state auto without breaking the code.
+const reducer = produce((state: CellState = initialState, action: Action) => {
+  switch (action.type) {
+    case ActionType.UPDATE_CELL:
+      const { id, content } = action.payload;
+      //without immer(produce) we have to return following object as state for redux but immer updates our state auto without breaking the code.
 
-        // return {
-        //   ...state,
-        //   data: {
-        //     ...state.data,
-        //     [id]: {
-        //       ...state.data[id],
-        //       content,
-        //     },
-        //   },
-        // };
+      // return {
+      //   ...state,
+      //   data: {
+      //     ...state.data,
+      //     [id]: {
+      //       ...state.data[id],
+      //       content,
+      //     },
+      //   },
+      // };
 
-        state.data[id].content = content;
-        return;
-      case ActionType.DELETE_CELL:
-        delete state.data[action.payload];
-        state.order = state.order.filter((id) => id !== action.payload);
-        return;
-      case ActionType.MOVE_CELL:
-        const { direction } = action.payload;
-        const index = state.order.findIndex((id) => id === action.payload.id);
-        const targetIndex = direction === "up" ? index - 1 : index + 1;
+      state.data[id].content = content;
+      return state;
+    case ActionType.DELETE_CELL:
+      delete state.data[action.payload];
+      state.order = state.order.filter((id) => id !== action.payload);
+      return state;
+    case ActionType.MOVE_CELL:
+      const { direction } = action.payload;
+      const index = state.order.findIndex((id) => id === action.payload.id);
+      const targetIndex = direction === "up" ? index - 1 : index + 1;
 
-        // check if targetIndex is out of boundry
-        if (targetIndex < 0 || targetIndex >= state.order.length - 1) {
-          return;
-        }
-
-        state.order[index] = state.order[targetIndex];
-        state.order[targetIndex] = action.payload.id;
-
-        return;
-      case ActionType.INSERT_CELL_BEFORE:
+      // check if targetIndex is out of boundry
+      if (targetIndex < 0 || targetIndex >= state.order.length - 1) {
         return state;
-      default:
-        return state;
-    }
+      }
+
+      state.order[index] = state.order[targetIndex];
+      state.order[targetIndex] = action.payload.id;
+
+      return state;
+    case ActionType.INSERT_CELL_BEFORE:
+      //define cell
+      const cell: Cell = {
+        id: Math.random().toString(36).substring(2, 5),
+        content: "",
+        type: action.payload.type,
+      };
+      //create a new cell in state.data
+      state.data[cell.id] = cell;
+      //
+      const foundIndex = state.order.findIndex(
+        (id) => id === action.payload.id
+      );
+      if (foundIndex < 0) {
+        state.order.push(cell.id);
+      } else {
+        state.order.splice(foundIndex, 0, cell.id);
+      }
+      return state;
+    default:
+      return state;
   }
-);
+}, initialState);
 
 export default reducer;
