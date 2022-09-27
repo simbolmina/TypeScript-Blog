@@ -1,0 +1,41 @@
+.add-cell {
+  position: relative;
+  opacity: 0;
+  transition: all 0.3s ease-in 0.2s;
+  margin: 10px 0;
+}
+
+/* simpler version of fixing transtion issue when creating new cell */
+/* .add-cell:active {
+  opacity: 0 !important;
+  transition: opacity 0s;
+} */
+
+.add-cell:hover {
+  opacity: 1;
+}
+
+.divider {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  border-bottom: 1px solid #888;
+  width: 95%;
+  right: 2.5%;
+  left: 2.5%;
+  z-index: -1;
+}
+
+.add-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.add-cell.force-visible {
+  opacity: 1;
+}
+
+/* .force-visible .add-cell {
+  opacity: 1;
+} */
