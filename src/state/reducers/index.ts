@@ -1,9 +1,11 @@
 import cellReducer from "./cellsReducer";
 import { combineReducers } from "redux";
 // import { ReducerState } from "react";
+import bundleReducer from "./bundleReducer";
 
 const reducers = combineReducers({
   cells: cellReducer,
+  bundles: bundleReducer,
 });
 
 export default reducers;
