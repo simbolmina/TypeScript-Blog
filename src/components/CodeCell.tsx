@@ -7,6 +7,7 @@ import Resizable from "./Resizable";
 import { Cell } from "../state";
 import { useActions } from "../hooks/useActions";
 import { useTypedSelector } from "../hooks/useTypedSelector";
+import { useCumulativeCode } from "../hooks/useCumulative";
 
 interface CodeCellProps {
   cell: Cell;
@@ -18,7 +19,8 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   // const [err, setErr] = useState("");
   const { updateCell, createBundle } = useActions();
   const bundle = useTypedSelector((state) => state.bundles[cell.id]);
-  // console.log(bundle);
+  //get all the code from current cell and prevous cell to bundle them together so variables from prevous cell can be used.
+  const cumulativeCode = useCumulativeCode(cell.id);
 
   //!bundle inside the component, before redux
   // useEffect(() => {
@@ -32,11 +34,12 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   //!bundle inside redux component
   useEffect(() => {
     if (!bundle) {
-      createBundle(cell.id, cell.content);
+      // createBundle(cell.id, cell.content);
+      createBundle(cell.id, cumulativeCode);
       return;
     }
     const timer = setTimeout(async () => {
-      createBundle(cell.id, cell.content);
+      createBundle(cell.id, cumulativeCode);
     }, 750);
 
     return () => {
@@ -44,7 +47,7 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
     };
     // }, [input]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cell.id, cell.content, createBundle]);
+  }, [cell.id, cumulativeCode, createBundle]);
 
   return (
     <Resizable direction="vertical">

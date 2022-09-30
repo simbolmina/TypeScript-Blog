@@ -26,6 +26,9 @@ const bundle = async (rawCode: string) => {
         global: "window",
         //when bundling packages global variable should be window
       },
+      //settings for our pre imported react/dom packages to avoid collustion from user downloaded packages
+      jsxFactory: "_React.createElement",
+      jsxFragment: "_React.Fragment",
     });
     return { code: result.outputFiles[0].text, err: "" };
   } catch (err) {
