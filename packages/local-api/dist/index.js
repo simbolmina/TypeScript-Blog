@@ -12,11 +12,14 @@ const serve = (port, filename, dir, useProxy) => {
     const app = (0, express_1.default)();
     //absolute path of index.html that we need to serve
     const packagePath = require.resolve("local-client/build/index.html");
+    //router for getting and posting cells from or to local files.
+    app.use((0, cells_1.createCellsRouter)(filename, dir));
     //so we determine if we use dev or final product with this ifelse statement.
     if (useProxy) {
         //this is for development and we have to keep our react app development server running while using this. this will serve development server. serving final app (build) client is express.static one where we serve built app.
         app.use((0, http_proxy_middleware_1.createProxyMiddleware)({
             target: "http://127.0.0.1:3000",
+            // target: "http://localhost:3000/",
             //web socket true. create-react-app uses this default
             ws: true,
             //make sure middleware does not log every incoming request.
@@ -32,8 +35,6 @@ const serve = (port, filename, dir, useProxy) => {
         app.use(express_1.default.static(path_1.default.dirname(packagePath)));
         // we just dont use index.html here, dirname let us use this path (build folder)
     }
-    //router for getting and posting cells from or to local files.
-    app.use((0, cells_1.createCellsRouter)(filename, dir));
     // this is for if user tries to run our application again while its running so we can show a decend warning message says that port is already in use. because running server takes time and even if we throw and error beforehand if we dont await the server running our application wont see that error and user will be confsused.
     //wrap express into custom promise to use it with async syntax. if we successfully run server it will resolve, otherwise it will reject and we will catch the error in the catch statement of serve.ts
     return new Promise((resolve, reject) => {
