@@ -17,12 +17,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@jbook-simbolmina/local-client": "^0.1.0"
+    "@jbook-simbolmina/local-client": "^1.0.0"
   },
   "devDependencies": {
     "@jbook-simbolmina/local-api": "^1.0.0",
-    "commander": "^9.4.1",
     "@types/node": "^18.7.23",
+    "commander": "^9.4.1",
     "esbuild": "0.8.26",
     "typescript": "^4.8.4"
   }
