@@ -6,6 +6,7 @@ To use this application as it is
 
 run//
 -npm install
+
 -lerna bootstrap -- --legacy-peer-deps or
 -lerna bootstrap -- -- --legacy-peer-deps
 
