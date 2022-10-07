@@ -12,7 +12,9 @@ export const serve = (
   const app = express();
 
   //absolute path of index.html that we need to serve
-  const packagePath = require.resolve("local-client/build/index.html");
+  const packagePath = require.resolve(
+    "@jbook-simbolmina/local-client/build/index.html"
+  );
 
   //router for getting and posting cells from or to local files.
   app.use(createCellsRouter(filename, dir));

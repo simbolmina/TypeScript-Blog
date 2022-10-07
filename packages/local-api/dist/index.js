@@ -11,7 +11,7 @@ const cells_1 = require("./routes/cells");
 const serve = (port, filename, dir, useProxy) => {
     const app = (0, express_1.default)();
     //absolute path of index.html that we need to serve
-    const packagePath = require.resolve("local-client/build/index.html");
+    const packagePath = require.resolve("@jbook-simbolmina/local-client/build/index.html");
     //router for getting and posting cells from or to local files.
     app.use((0, cells_1.createCellsRouter)(filename, dir));
     //so we determine if we use dev or final product with this ifelse statement.
