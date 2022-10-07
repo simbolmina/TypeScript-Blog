@@ -103,7 +103,7 @@ export const saveCells = () => {
 
     const cells = order.map((id) => data[id]);
     try {
-      await axios.prototype("/cells", { cells });
+      await axios.post("/cells", { cells });
     } catch (err) {
       if (err instanceof Error) {
         dispatch({

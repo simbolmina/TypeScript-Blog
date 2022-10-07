@@ -14,6 +14,7 @@ export const persistMiddleware = ({
   let timer: any;
   return (next: (action: Action) => void) => {
     return (action: Action) => {
+      //we want to pass every action come thro this first.
       next(action);
 
       if (

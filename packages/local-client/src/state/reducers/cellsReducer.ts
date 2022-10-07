@@ -29,7 +29,9 @@ const reducer = produce((state: CellState = initialState, action: Action) => {
       state.error = null;
       return state;
     case ActionType.FETCH_CELLS_COMPLETE:
+      //get cells in correct order
       state.order = action.payload.map((cell) => cell.id);
+      //
       state.data = action.payload.reduce((acc, cell) => {
         acc[cell.id] = cell;
         return acc;
